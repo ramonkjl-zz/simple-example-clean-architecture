@@ -1,33 +1,33 @@
 type HttpResponse = {
-    statusCode: number
-    body: any
+  statusCode: number
+  body: any
 }
 type HttpRequest = {
-    body: any
+  body: any
 }
 
 // Presentation
 // signUp-router
 export class SignUpRouter {
-    async route(httpRequest: HttpRequest): Promise<HttpResponse> {
-        const { email, password, repeatPassword } = httpRequest.body
+  async route(httpRequest: HttpRequest): Promise<HttpResponse> {
+    const { email, password, repeatPassword } = httpRequest.body
 
-        const user = await new SignUpUseCase().signUp(email, password, repeatPassword)
+    const user = await new SignUpUseCase().signUp(email, password, repeatPassword)
 
-        return {
-            statusCode: 200,
-            body: user
-        }
+    return {
+      statusCode: 200,
+      body: user
     }
+  }
 }
 
 // Domain
 // signUp-useCase
 export class SignUpUseCase {
-    async signUp(email: string, password: string, repeatPassword: string) {
-        if (password === repeatPassword)
-            return new AddAccountRepository().add(email, password)
-    }
+  async signUp(email: string, password: string, repeatPassword: string) {
+    if (password === repeatPassword)
+      return new AddAccountRepository().add(email, password)
+  }
 }
 
 // Infra
@@ -36,11 +36,11 @@ import mongoose from 'mongoose'
 const AccountModel = mongoose.model('Account')
 
 export class AddAccountRepository {
-    async add(email: string, password: string) {
-        const user = await AccountModel.create({ email, password })
+  async add(email: string, password: string) {
+    const user = await AccountModel.create({ email, password })
 
-        return user
-    }
+    return user
+  }
 }
 
 // class AccountModel {
@@ -53,17 +53,17 @@ export class AddAccountRepository {
 import express, { Request, Response } from 'express'
 
 export class ExpressRouterAdapter {
-    static adapt(router: SignUpRouter) {
-        return async (req: Request, res: Response) => {
-            const httpRequest = {
-                body: req.body
-            }
+  static adapt(router: SignUpRouter) {
+    return async (req: Request, res: Response) => {
+      const httpRequest = {
+        body: req.body
+      }
 
-            const httpResponse = await router.route(httpRequest)
+      const httpResponse = await router.route(httpRequest)
 
-            return res.status(httpResponse.statusCode).json(httpResponse.body)
-        }
+      return res.status(httpResponse.statusCode).json(httpResponse.body)
     }
+  }
 }
 
 // main
