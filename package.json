@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "jest --watch --verbose",
+    "test": "jest --watch --verbose --coverage",
     "test:watch": "jest --watch"
   },
   "dependencies": {
